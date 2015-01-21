@@ -115,5 +115,5 @@ def main():
     return bot.run()
 
 if __name__ == '__main__':
-    with daemon.DaemonContext():
-        main()
+    # with daemon.DaemonContext():
+    main()
