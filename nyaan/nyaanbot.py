@@ -111,7 +111,7 @@ class TwitterBot():
             logger.info(msg['user']['screen_name'] + ':' + msg['text'])
             time.sleep(5)
             self.client.statuses.retweet(id=msg['id'])
-            self.last_nyaan[msg['user']['id']] = now + random.randrange(0, 30, 1)
+            self.last_nyaan[msg['user']['id']] = now + random.randrange(0, 60, 1)
             self.nyaan_stat()
 
     def _create_nyaan_track(self):
