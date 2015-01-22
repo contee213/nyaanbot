@@ -102,6 +102,10 @@ def main():
     bot = TwitterBot()
     return bot.run()
 
+def daemon():
+    with daemon.DaemonContext():
+        main()
+
 if __name__ == '__main__':
     # with daemon.DaemonContext():
     main()

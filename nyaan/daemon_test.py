@@ -10,14 +10,23 @@ file commment here.
 
 """
 
-import logging
 import daemon
-
-logger = logging.getLogger(__name__)
+import logging
+import time
+from nyaan.log import setup_logging
 
 def main():
-    logger.info("test")
+    logger = logging.getLogger(__name__)
+    while True:
+        try:
+            logger.debug("debug")
+            logger.info("info")
+            logger.error("error")
+        except KeyboardInterrupt:
+            break
+        time.sleep(5)
 
 if __name__ == '__main__':
+    setup_logging()
     with daemon.DaemonContext():
         main()
