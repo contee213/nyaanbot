@@ -106,7 +106,7 @@ class TwitterBot():
                 continue
             if msg['user']['id'] in self.last_nyaan:
                 # ランダム時間の連続制限
-                if self.last_nyaan[msg['user']['id']] < now:
+                if self.last_nyaan[msg['user']['id']] > now:
                     continue
             logger.info(msg['user']['screen_name'] + ':' + msg['text'])
             time.sleep(5)
@@ -116,9 +116,9 @@ class TwitterBot():
 
     def _create_nyaan_track(self):
         track_str = []
-        prefix = ['', 'にゃ', 'にゃん']
+        prefix = ['', 'にゃ', 'にゃん', 'にゃーん']
         base = ['にゃん','にゃーん','にゃ〜ん', 'にゃおーん', 'にゃお〜ん', 'にゃああん']
-        affix = ['', '！', '？', '♡', '♥', '♪', '☆', '。', '.', '...', '・・・']
+        affix = ['', '！', '？', '♡', '♥', '♪', '☆', '。', '.', '...', '・・・', 'にゃん']
         for s in itertools.product(prefix, base, affix):
             track_str.append(''.join(s))
         tsj = ','.join(track_str)
