@@ -106,22 +106,18 @@ class TwitterBot():
                 continue
             if msg['user']['id'] in self.last_nyaan:
                 # ランダム時間の連続制限
-                if self.last_nyaan[msg['user']['id']]['last_time'] > now:
-                    continue
-                # 同じ場合も制限
-                if self.last_nyaan[msg['user']['id']]['last_text'] == msg['text']:
+                if self.last_nyaan[msg['user']['id']] > now:
                     continue
             logger.info(msg['user']['screen_name'] + ':' + msg['text'])
             time.sleep(5)
             self.client.statuses.retweet(id=msg['id'])
-            self.last_nyaan[msg['user']['id']]['last_time'] = now + random.randrange(0, 60, 1)
-            self.last_nyaan[msg['user']['id']]['last_text'] = msg['text']
+            self.last_nyaan[msg['user']['id']] = now + random.randrange(0, 60, 1)
             self.nyaan_stat()
 
     def _create_nyaan_track(self):
         track_str = []
         prefix = ['', 'にゃ', 'にゃん', 'にゃーん']
-        base = ['にゃ', 'にゃん','にゃーん','にゃ〜ん', 'にゃおーん', 'にゃお〜ん', 'にゃああん']
+        base = ['にゃん','にゃーん','にゃ〜ん', 'にゃおーん', 'にゃお〜ん', 'にゃああん']
         affix = ['', '！', '？', '♡', '♥', '♪', '☆', '。', '.', '...', '・・・', 'にゃん']
         for s in itertools.product(prefix, base, affix):
             track_str.append(''.join(s))
