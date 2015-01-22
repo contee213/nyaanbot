@@ -60,7 +60,7 @@ class TwitterBot():
 
     def __init__(self):
         self.client = twitter.Twitter(auth=oauth())
-        self.search_client = twitter.Twitter(auth=oauth2())
+        # self.search_client = twitter.Twitter(auth=oauth2())
         self.pub_stream = twitter.TwitterStream(auth=oauth(), domain='stream.twitter.com')
         self.scheduler = Scheduler(tasks=[ScheduledTask(self.retweet_nyaan, 5)])
 
@@ -107,5 +107,4 @@ def boot_daemon():
         main()
 
 if __name__ == '__main__':
-    # with daemon.DaemonContext():
     main()
