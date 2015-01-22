@@ -93,7 +93,7 @@ class TwitterBot():
         logger.debug(response)
         for msg in response:
             now = time.time()
-            if len(msg['text']) > 0:
+            if len(msg['text']) > 40:
                 continue
             if msg['in_reply_to_user_id'] or msg['entities']['user_mentions']:
                 continue
@@ -120,7 +120,6 @@ class TwitterBot():
         for s in itertools.product(prefix, base, affix):
             track_str.append(''.join(s))
         tsj = ','.join(track_str)
-        logger.info(tsj)
         return tsj
 
     def is_kimagure(self):
