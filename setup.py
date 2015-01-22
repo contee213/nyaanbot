@@ -9,7 +9,9 @@ setup.py
 
 from setuptools import setup, find_packages
 
-setup(name='nyaan',
+version = '0.0.1'
+
+setup(name=version,
       version='1.0',
       description='Twitter Nyaan Bot',
       author='contee213',
