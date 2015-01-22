@@ -92,6 +92,7 @@ class TwitterBot():
         logger.debug(track_str)
         logger.debug(response)
         for msg in response:
+            logger.debug(msg['text'])
             now = time.time()
             if len(msg['text']) > 40:
                 continue
@@ -99,9 +100,9 @@ class TwitterBot():
                 continue
             if self.is_kimagure():
                 continue
-            if str.upper(msg['user']['name']).find('BOT') < 0:
+            if str.upper(msg['user']['name']).find('BOT') >= 0:
                 continue
-            if str.upper(msg['user']['screen_name']).find('BOT') < 0:
+            if str.upper(msg['user']['screen_name']).find('BOT') >= 0:
                 continue
             if msg['user']['id'] in self.last_nyaan:
                 # ランダム時間の連続制限
