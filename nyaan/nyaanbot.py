@@ -99,6 +99,10 @@ class TwitterBot():
                 continue
             if self.is_kimagure():
                 continue
+            if str.upper(msg['user']['name']).find('BOT') < 0:
+                continue
+            if str.upper(msg['user']['screen_name']).find('BOT') < 0:
+                continue
             if msg['user']['id'] in self.last_nyaan:
                 # ランダム時間の連続制限
                 if self.last_nyaan[msg['user']['id']] < now:
@@ -136,7 +140,7 @@ class TwitterBot():
             except:
                 logger.error(traceback.format_exc())
             logger.info("--- loop next ---")
-            time.sleep(30)
+            time.sleep(10)
         logger.info("end")
 
 def main():
