@@ -1,7 +1,7 @@
 #!/bin/bash
 
 yum -y groupinstall "Development tools"
-yum -y install gcc zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel
+yum -y install gcc zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel git
 
 curl -O https://www.python.org/ftp/python/3.4.2/Python-3.4.2.tgz
 
