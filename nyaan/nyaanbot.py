@@ -121,7 +121,7 @@ class TwitterBot():
     def _create_nyaan_track(self):
         track_str = []
         prefix = ['', 'にゃ', 'にゃん', 'にゃーん']
-        base = ['にゃん','にゃーん','にゃ〜ん', 'にゃおーん', 'にゃお〜ん', 'にゃああん']
+        base = ['にゃ', 'にゃん','にゃーん','にゃ〜ん', 'にゃおーん', 'にゃお〜ん', 'にゃああん']
         affix = ['', '！', '？', '♡', '♥', '♪', '☆', '。', '.', '...', '・・・', 'にゃん']
         for s in itertools.product(prefix, base, affix):
             track_str.append(''.join(s))
