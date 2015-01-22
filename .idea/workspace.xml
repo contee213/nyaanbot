@@ -63,8 +63,8 @@
       <file leaf-file-name="nyaanbot.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nyaan/nyaanbot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.79441625" vertical-offset="1382" max-vertical-offset="2445">
-              <caret line="113" column="76" selection-start-line="113" selection-start-column="76" selection-end-line="113" selection-end-column="76" />
+            <state vertical-scroll-proportion="0.33756346" vertical-offset="1517" max-vertical-offset="2505">
+              <caret line="110" column="25" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
               <folding>
                 <element signature="e#105#126#0" expanded="true" />
               </folding>
@@ -668,8 +668,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nyaan/nyaanbot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.79441625" vertical-offset="1382" max-vertical-offset="2445">
-          <caret line="113" column="76" selection-start-line="113" selection-start-column="76" selection-end-line="113" selection-end-column="76" />
+        <state vertical-scroll-proportion="0.33756346" vertical-offset="1517" max-vertical-offset="2505">
+          <caret line="110" column="25" selection-start-line="110" selection-start-column="25" selection-end-line="110" selection-end-column="25" />
           <folding>
             <element signature="e#105#126#0" expanded="true" />
           </folding>

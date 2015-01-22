@@ -106,12 +106,16 @@ class TwitterBot():
                 continue
             if msg['user']['id'] in self.last_nyaan:
                 # ランダム時間の連続制限
-                if self.last_nyaan[msg['user']['id']] > now:
+                if self.last_nyaan[msg['user']['id']]['last_time'] > now:
+                    continue
+                # 同じ場合も制限
+                if self.last_nyaan[msg['user']['id']]['last_text'] == msg['text']:
                     continue
             logger.info(msg['user']['screen_name'] + ':' + msg['text'])
             time.sleep(5)
             self.client.statuses.retweet(id=msg['id'])
-            self.last_nyaan[msg['user']['id']] = now + random.randrange(0, 60, 1)
+            self.last_nyaan[msg['user']['id']]['last_time'] = now + random.randrange(0, 60, 1)
+            self.last_nyaan[msg['user']['id']]['last_text'] = msg['text']
             self.nyaan_stat()
 
     def _create_nyaan_track(self):
