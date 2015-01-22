@@ -102,7 +102,7 @@ def main():
     bot = TwitterBot()
     return bot.run()
 
-def daemon():
+def boot_daemon():
     with daemon.DaemonContext():
         main()
 

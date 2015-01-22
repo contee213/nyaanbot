@@ -7,19 +7,19 @@ setup.py
 ~~~~~~~~~~~~~~
 """
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 version = '0.0.1'
 
-setup(name=version,
-      version='1.0',
+setup(name='nyaan',
+      version=version,
       description='Twitter Nyaan Bot',
       author='contee213',
       author_email='contee213@gmail.com',
       url='http://github.com/contee213',
-      packages=find_packages(),
+      packages=['nyaan'],
       entry_points="""
       [console_scripts]
-      nyaanbotd = nyaan.nyaanbot:daemon
+      nyaanbotd = nyaan.nyaanbot:boot_daemon
       """
      )
