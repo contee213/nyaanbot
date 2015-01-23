@@ -51,7 +51,12 @@ class TwitterBot():
 
 
     def exclude_nyaan(self, msg, now):
-        if len(msg['text']) > 20:
+        limit = 12
+        if msg['text'].find('pic.twitter') >= 0:
+            limit += 30
+        if msg['text'].find('instagram') >= 0:
+            limit += 30
+        if len(msg['text']) > limit:
             return True
         if msg['in_reply_to_user_id'] or msg['entities']['user_mentions']:
             return True
@@ -60,6 +65,8 @@ class TwitterBot():
         if str.upper(msg['user']['name']).find('BOT') >= 0:
             return True
         if str.upper(msg['user']['screen_name']).find('BOT') >= 0:
+            return True
+        if str.upper(msg['user']['description'].find('BOT')) >= 0:
             return True
         if msg['user']['id'] in self.last_nyaan:
             # ランダム時間の連続制限
@@ -84,7 +91,7 @@ class TwitterBot():
     def retweet_nyaan(self, msg, now):
         logger.info(msg['user']['screen_name'] + ':' + msg['text'])
         time.sleep(random.randrange(30, 300, 10))
-        self.client.statuses.retweet(id=msg['id'])
+        # self.client.statuses.retweet(id=msg['id'])
         self.last_nyaan[msg['user']['id']] = now + random.randrange(30, 1800, 10)
         self.nyaan_stat()
 
