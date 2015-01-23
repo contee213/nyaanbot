@@ -66,7 +66,7 @@ class TwitterBot():
             return True
         if str.upper(msg['user']['screen_name']).find('BOT') >= 0:
             return True
-        if str.upper(msg['user']['description'].find('BOT')) >= 0:
+        if str.upper(msg['user']['description']).find('BOT') >= 0:
             return True
         if msg['user']['id'] in self.last_nyaan:
             # ランダム時間の連続制限
