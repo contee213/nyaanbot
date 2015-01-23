@@ -3,60 +3,24 @@
 __author__ = 'contee'
 
 """
-nyaanbot
+renyaan
 ~~~~~~~~~~~~~~
 
-this bot tweet nyaan.
+wait and renyaan
 
 """
 
 import time, datetime
 import twitter
-import heapq
 import traceback
 import itertools
-import daemon
 import random
 import logging
 from nyaan.auth import oauth, oauth2
 from nyaan.log import setup_logging
 
 logger = logging.getLogger(__name__)
-
-class ScheduledTask(object):
-
-    def __init__(self, task, interval):
-        self.task = task
-        self.interval = interval
-        self.next = time.time()
-
-    def __lt__(self, other):
-        return self.next < other.next
-
-    def __call__(self):
-        return self.task()
-
-class Scheduler(object):
-
-    def __init__(self, tasks):
-        self.task_heap = []
-        for task in tasks:
-            heapq.heappush(self.task_heap, task)
-
-    def next_task(self):
-        task = heapq.heappop(self.task_heap)
-        wait = task.next - time.time()
-        if wait > 0:
-            time.sleep(wait)
-        task()
-        task.next = time.time() + task.interval
-        heapq.heappush(self.task_heap, task)
-
-    def run_forever(self):
-        while True:
-            logger.debug("== do task ==")
-            self.next_task()
-
+from concurrent.futures import ThreadPoolExecutor
 
 class TwitterBot():
 
@@ -64,7 +28,6 @@ class TwitterBot():
         self.client = twitter.Twitter(auth=oauth())
         # self.search_client = twitter.Twitter(auth=oauth2())
         self.pub_stream = twitter.TwitterStream(auth=oauth(), domain='stream.twitter.com')
-        self.scheduler = Scheduler(tasks=[ScheduledTask(self.retweet_nyaan, 5)])
         self.last_nyaan = dict()
         self.last_reset = datetime.datetime.now()
         self.count_nyaan = 0
@@ -86,33 +49,44 @@ class TwitterBot():
         self.client.statuses.update(status=msg)
         self._clear()
 
-    def retweet_nyaan(self):
+
+    def exclude_nyaan(self, msg, now):
+        if len(msg['text']) > 20:
+            return True
+        if msg['in_reply_to_user_id'] or msg['entities']['user_mentions']:
+            return True
+        if self.is_kimagure():
+            return True
+        if str.upper(msg['user']['name']).find('BOT') >= 0:
+            return True
+        if str.upper(msg['user']['screen_name']).find('BOT') >= 0:
+            return True
+        if msg['user']['id'] in self.last_nyaan:
+            # ランダム時間の連続制限
+            if self.last_nyaan[msg['user']['id']] > now:
+                return True
+        return False
+
+    def listen_nyaan(self):
         track_str = self._create_nyaan_track()
         response = self.pub_stream.statuses.filter(track=track_str)
         logger.debug(track_str)
         logger.debug(response)
-        for msg in response:
-            logger.debug(msg['text'])
-            now = time.time()
-            if len(msg['text']) > 20:
-                continue
-            if msg['in_reply_to_user_id'] or msg['entities']['user_mentions']:
-                continue
-            if self.is_kimagure():
-                continue
-            if str.upper(msg['user']['name']).find('BOT') >= 0:
-                continue
-            if str.upper(msg['user']['screen_name']).find('BOT') >= 0:
-                continue
-            if msg['user']['id'] in self.last_nyaan:
-                # ランダム時間の連続制限
-                if self.last_nyaan[msg['user']['id']] > now:
+
+        with ThreadPoolExecutor(max_workers=100) as executor:
+            for msg in response:
+                logger.debug(msg['text'])
+                now = time.time()
+                if self.exclude_nyaan(msg, now):
                     continue
-            logger.info(msg['user']['screen_name'] + ':' + msg['text'])
-            time.sleep(5)
-            self.client.statuses.retweet(id=msg['id'])
-            self.last_nyaan[msg['user']['id']] = now + random.randrange(30, 1800, 10)
-            self.nyaan_stat()
+                executor.submit(self.retweet_nyaan, msg, now)
+
+    def retweet_nyaan(self, msg, now):
+        logger.info(msg['user']['screen_name'] + ':' + msg['text'])
+        time.sleep(random.randrange(30, 300, 10))
+        self.client.statuses.retweet(id=msg['id'])
+        self.last_nyaan[msg['user']['id']] = now + random.randrange(30, 1800, 10)
+        self.nyaan_stat()
 
     def _create_nyaan_track(self):
         track_str = []
@@ -133,7 +107,7 @@ class TwitterBot():
             logger.info("--- loop start ---")
             try:
                 self._clear()
-                self.scheduler.run_forever()
+                self.listen_nyaan()
             except twitter.TwitterError:
                 logger.error(traceback.format_exc())
             except KeyboardInterrupt:
@@ -144,14 +118,11 @@ class TwitterBot():
             time.sleep(10)
         logger.info("end")
 
+
 def main():
     setup_logging()
     bot = TwitterBot()
     return bot.run()
-
-def boot_daemon():
-    with daemon.DaemonContext():
-        main()
 
 if __name__ == '__main__':
     main()
